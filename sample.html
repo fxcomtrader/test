@@ -4,23 +4,12 @@
 	 <p><input type="textbox" id="user" style="width:120px; height:20px">
  <input type="button" id="stat" value="?"style="width:20px; height:20px"></p>
      <script>
-/*	 
-steem.api.setOptions({ url: 'https://vox.community:9000' });
-steem.config.set('chain_id','6d7a99c29fa3b33c4aec02f6f84917eff284b6e7712c607e2ee98b87296ce57a');
-var pattern = /((https?|ftp):\/\/\S+[^\s.,> )\];'\"!?]+\.(?:jpe?g|gif|png))/gi;
-var $parent_author='dash';
-var $parent_permlink='ogranichenie-2-posta-v-den-ya-ne-uveren';
-steem.api.getContent($parent_author,$parent_permlink, function(err, result){
-var newbody = result.body.replace(pattern, '<p><center><img src="'+'$1'+'" width="376" /></center></p>');
-document.getElementById('vp').insertAdjacentHTML('afterbegin',newbody,); 
-});
-*/
 
 steem.api.setOptions({ url: 'https://vox.community:9000' });
 steem.config.set('chain_id','6d7a99c29fa3b33c4aec02f6f84917eff284b6e7712c607e2ee98b87296ce57a');
 //---
 document.getElementById('stat').onclick = function() {
-var account=document.getElementById("user").value;//'investigator';//аккаунт на котором смотрим Voting Power
+var account=document.getElementById("user").value;//аккаунт на котором смотрим Voting Power
 
 
 
