@@ -1,0 +1,86 @@
+<html><meta http-equiv="content-type" content="text/html; charset=utf-8"><script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
+	 <h3>Робот для VOX.community</h3>
+	 <em>Размещает комментарии под постами и апвоутит эти комментарии,<br>когда уровень регенерации Voting Power достигнет 100%.<br>Робот активен, когда эта страница открыта в браузере.</em><p></p>
+<p>Account: <input placeholder="Без знака @" type="textbox" id="user" style="width:140px; height:20px"></p>
+<p>Key: <input placeholder="Приватный постинг ключ" type="textbox" id="key" style="width:340px; height:20px"></p>
+<p>Link: <input placeholder="Ссылка на пост" type="textbox" id="permlnk" style="width:340px; height:20px"></p>
+<p>Text: <input placeholder="Только на английском (или оставьте пустым)" type="textbox" id="text_comment" style="width:340px; height:20px"></p>
+<p>Timer: <input placeholder="Минут" type="textbox" id="timer" style="width:60px; height:20px"></p>
+<p><input type="button" id="stat" value="Поехали!"style="width:70px; height:20px"></p>
+<script>
+steem.api.setOptions({ url: 'https://vox.community:9000' });
+steem.config.set('chain_id','88a13f63de69c3a927594e07d991691c20e4cf1f34f83ae9bd26441db42a8acd');
+document.getElementById('stat').onclick = function() {
+
+var account=document.getElementById("user").value;
+//var account='ваш аккаунт без @';
+var wif = document.getElementById("key").value;
+//var wif = 'ваш приватный постинг ключ';
+var link=document.getElementById("permlnk").value;
+var interlived=document.getElementById("timer").value;
+var timerId = setInterval(function() {
+steem.api.getAccounts([account], function(err, result){
+	var power = result[0].voting_power;
+	var votetime = Date.parse(result[0].last_vote_time);
+
+  steem.api.getDynamicGlobalProperties(function(err, result) {  
+	var curtime = Date.parse(result.time);
+	var volume =(power+((curtime-votetime)/1000)*0.11574);
+	var charge;
+	if(volume>=10000){
+	charge=100.00;
+	posting();
+	}
+	else charge=+(volume/100).toFixed(2);
+	var estimate = (10000-volume)/0.11574;
+  
+var timeFormat = (function (){
+    function num(val){
+        val = Math.floor(val);
+        return val<10?'0'+val:val;
+    }
+    return function (ms){
+        var sec = ms/1000;
+        var hours = sec/3600%24;
+        var minutes = sec/60%60;
+        var seconds = sec%60;
+        return num(hours)+":"+num(minutes)+":"+num(seconds);
+    };
+})();
+
+var time = timeFormat(estimate*1000)
+var full;
+if (estimate<86400 && estimate>2 )full = time;
+else if (estimate>=86400)full = "сутки";
+else if (estimate<3)full = "00:00:00";
+
+document.getElementById('vp').innerHTML = ('Уровень заряда VP: '+charge+'% | 100% по истечении: '+full);
+	});	
+});
+
+}, +interlived*60000);
+
+function posting(){
+var dt_now = Math.round(Date.now()/1000);
+var parent_author=link.split('@')[1].split('/')[0]; 
+var parent_permlink=link.split('@')[1].split('/')[1];
+var author=account; 
+var permlink='re-'+parent_author+'-'+parent_permlink+dt_now;
+var post_body=document.getElementById("text_comment").value+' ';
+var title ='';
+var jsonMetadata = {};
+var percent=10000;	
+steem.broadcast.comment(wif,parent_author,parent_permlink,author,permlink,title,post_body,jsonMetadata,function(err, result) {//console.log(err, result); });
+if(err){console.log(err); } else {
+document.getElementById('vt').innerHTML = ('Последний комментарий опубликован: '+new Date());}
+});
+steem.broadcast.vote(wif, account, author, permlink, percent, function(err, result) {
+if(err){console.log(err); }  else {
+  document.getElementById('vv').innerHTML = ('Апвоут поставлен: '+new Date());
+  }
+});
+};
+};
+</script>
+<p><b id="vp"></b></p><p><b id="vt"></b></p><p><b id="vv"></b></p>
+</html>
