@@ -2,18 +2,19 @@
 <script>
 var socket = new WebSocket('wss://vox.community/ws');	//идентифицируем сокет	
 socket.onopen = function(event) { //открываем сокет
-socket.send(JSON.stringify({ //посылаем запрос через сокет (присваиваем запросу id:1, чтобы идентифицировать ответ на этот запрос)
-			id: 1,
+socket.send(JSON.stringify({ //посылаем запрос через сокет сериализуя в JSON
+			id: 1,//присваиваем запросу id:1, чтобы идентифицировать ответ на этот запрос
             method: 'get_dynamic_global_properties', //аналог функции api.getDynamicGlobalProperties
             'params': [] //функция не подразумевает никаких дополнительных параметров
 }));
 }
 socket.onmessage = function(event) {//слушаем сокет
 		data = JSON.parse(event.data); //все данные получаемые из сокета парсим в формат JSON	
-	if (data.id === 1  ) {//если данные имеют идентификатор 1 (id:1 который мы назначили в запросе
+	if (data.id === 1  ) {//если данные имеют идентификатор который мы назначили в запросе (id:1)
 		document.getElementById('socket').innerHTML = (data.result.head_block_number);// то выводим параметр head_block_number (номер последнего известного блока) в поле "socket" html странички
 	}
 }
+//* Если хотим вывести другие данные из полученного ответа, например time,то выводимые данные надо брать так: data.result.time
 </script>
 <section id="socket"></section>
 </html>
