@@ -1,0 +1,20 @@
+<html>
+<script>
+var socket = new WebSocket('wss://vox.community/ws');	
+		
+socket.onopen = function(event) {
+socket.send(JSON.stringify({
+			id: 1,
+            method: 'get_dynamic_global_properties',
+            'params': []
+}));
+}
+socket.onmessage = function(event) {
+		data = JSON.parse(event.data);	
+	if (data.id === 1  ) {
+		document.getElementById('socket').innerHTML = (data.result.head_block_number);
+	}
+}
+</script>
+<section id="socket"></section>
+</html>
