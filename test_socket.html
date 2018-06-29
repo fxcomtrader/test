@@ -1,18 +1,17 @@
 <html>
 <script>
-var socket = new WebSocket('wss://vox.community/ws');	
-		
-socket.onopen = function(event) {
-socket.send(JSON.stringify({
+var socket = new WebSocket('wss://vox.community/ws');	//идентифицируем сокет	
+socket.onopen = function(event) { //открываем сокет
+socket.send(JSON.stringify({ //посылаем запрос через сокет (присваиваем запросу id:1, чтобы идентифицировать ответ на этот запрос)
 			id: 1,
-            method: 'get_dynamic_global_properties',
-            'params': []
+            method: 'get_dynamic_global_properties', //аналог функции api.getDynamicGlobalProperties
+            'params': [] //функция не подразумевает никаких дополнительных параметров
 }));
 }
-socket.onmessage = function(event) {
-		data = JSON.parse(event.data);	
-	if (data.id === 1  ) {
-		document.getElementById('socket').innerHTML = (data.result.head_block_number);
+socket.onmessage = function(event) {//слушаем сокет
+		data = JSON.parse(event.data); //все данные получаемые из сокета парсим в формат JSON	
+	if (data.id === 1  ) {//если данные имеют идентификатор 1 (id:1 который мы назначили в запросе
+		document.getElementById('socket').innerHTML = (data.result.head_block_number);// то выводим параметр head_block_number (номер последнего известного блока) в поле "socket" html странички
 	}
 }
 </script>
