@@ -14,7 +14,7 @@ socket.onmessage = function(event) {//слушаем сокет
 		document.getElementById('socket').innerHTML = (data.result.head_block_number);// то выводим параметр head_block_number (номер последнего известного блока) в поле "socket" html странички
 	}
 }
-//* Если хотим вывести другие данные из полученного ответа, например time,то выводимые данные надо брать так: data.result.time
+//* Если хотим вывести другие данные из полученного ответа, например: time,то выводимые данные надо брать так: data.result.time
 </script>
 <section id="socket"></section>
 </html>
